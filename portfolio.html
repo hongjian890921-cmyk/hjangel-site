@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="组合净值追踪 · 价值红利10只与全枢约12只等权净值，周度对比沪深300、中证红利">
+    <title>组合追踪 · hjangel.com 投研手记</title>
+    <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+<nav class="nav">
+    <div class="nav-container">
+        <a href="index.html" class="nav-logo">hjangel<span class="accent">·</span>投研手记</a>
+        <ul class="nav-links">
+            <li><a href="index.html">首页</a></li>
+            <li><a href="research.html">研究</a></li>
+            <li><a href="portfolio.html" class="active">组合追踪</a></li>
+            <li><a href="about.html">关于</a></li>
+        </ul>
+    </div>
+</nav>
+
+<main class="container">
+
+    <h1>组合追踪</h1>
+    <p class="subtitle">等权拟合净值，2026-08-14 = 1.0，每周五收盘更新 · <a href="holdings.html">持仓明细 →</a></p>
+
+    <!-- 大图 -->
+    <div class="chart-card">
+        <div class="chart-title">双组合 vs 指数 · 等权拟合净值曲线</div>
+        <div class="chart-subtitle" id="chart-subtitle">加载中...</div>
+        <img class="chart-img" id="main-chart" src="charts/portfolio.png" alt="净值曲线" onerror="this.style.display='none'; document.getElementById('chart-fallback').style.display='block';">
+        <div id="chart-fallback" class="loading" style="display:none;">
+            <div>📊 首次部署，等待第一次数据更新</div>
+        </div>
+    </div>
+
+    <h2>分组合对比</h2>
+    <div id="group-charts">
+        <!-- JS 自动插入分图表 -->
+    </div>
+
+    <h2>完整数据表</h2>
+    <div class="card">
+        <table class="table" id="full-table">
+            <thead>
+                <tr>
+                    <th>日期</th>
+                </tr>
+            </thead>
+            <tbody id="full-tbody">
+                <tr><td class="loading">加载中...</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+</main>
+
+<footer class="footer">
+    <div>hjangel.com · 投研手记 · <a href="about.html">关于与免责声明</a></div>
+    <div class="disclaimer">本组合仅作个人投研跟踪记录，不构成任何投资建议。市场有风险，决策需谨慎。</div>
+</footer>
+
+<script>
+    fetch('data/portfolio.json')
+        .then(r => r.ok ? r.json() : Promise.reject('no data'))
+        .then(data => {
+            const series = data.series || {};
+            const dates = data.dates || [];
+            const latestDate = dates[dates.length - 1] || '--';
+            document.getElementById('chart-subtitle').textContent =
+                `${data.start_date} = 1 · ${latestDate} · 本地币种 · ${data.rebalance || '日度再平衡'}`;
+
+            // 完整数据表
+            const thead = document.querySelector('#full-table thead tr');
+            const tbody = document.querySelector('#full-table tbody');
+            const seriesNames = Object.keys(series);
+
+            thead.innerHTML = '<th>日期</th>' + seriesNames.map(n => `<th>${n}</th>`).join('');
+            tbody.innerHTML = '';
+
+            dates.forEach((d, i) => {
+                const tr = document.createElement('tr');
+                let html = `<td>${d}</td>`;
+                seriesNames.forEach(name => {
+                    const v = series[name][i] || 1;
+                    const chg = (v - 1) * 100;
+                    const cls = chg > 0.01 ? 'up' : (chg < -0.01 ? 'down' : '');
+                    const sign = chg > 0 ? '+' : '';
+                    html += `<td class="${cls}">${v.toFixed(4)} (${sign}${chg.toFixed(2)}%)</td>`;
+                });
+                tr.innerHTML = html;
+                tbody.appendChild(tr);
+            });
+        })
+        .catch(err => {
+            document.querySelector('#full-tbody').innerHTML =
+                '<tr><td class="loading">📊 首次部署，等待第一次数据更新</td></tr>';
+        });
+</script>
+
+</body>
+</html>

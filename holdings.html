@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>持仓明细 · hjangel.com 投研手记</title>
+    <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+<nav class="nav">
+    <div class="nav-container">
+        <a href="index.html" class="nav-logo">hjangel<span class="accent">·</span>投研手记</a>
+        <ul class="nav-links">
+            <li><a href="index.html">首页</a></li>
+            <li><a href="research.html">研究</a></li>
+            <li><a href="portfolio.html">组合追踪</a></li>
+            <li><a href="about.html">关于</a></li>
+        </ul>
+    </div>
+</nav>
+
+<main class="container">
+
+    <h1>持仓明细</h1>
+    <p class="subtitle">两个对比组合的具体构成，等权配置，月度再平衡 · <a href="portfolio.html">返回净值曲线 →</a></p>
+
+    <h2>价值红利 10 只等权</h2>
+    <div class="card">
+        <div id="holdings-value-yield">加载中...</div>
+    </div>
+
+    <h2>全枢约 12 只等权</h2>
+    <div class="card">
+        <div id="holdings-all-core">加载中...</div>
+    </div>
+
+    <div class="notice">
+        <div class="notice-title">⚠️ 调仓规则</div>
+        <div>月度再平衡：每月第一个交易日，根据收盘价重新等权配置。季报披露后评估是否需要调出/调入个股。</div>
+    </div>
+
+</main>
+
+<footer class="footer">
+    <div>hjangel.com · 投研手记 · <a href="about.html">关于与免责声明</a></div>
+    <div class="disclaimer">本组合仅作个人投研跟踪记录，不构成任何投资建议。市场有风险，决策需谨慎。</div>
+</footer>
+
+<script>
+    fetch('data/holdings.json')
+        .then(r => r.ok ? r.json() : Promise.reject('no data'))
+        .then(data => {
+            const render = (id, group) => {
+                const el = document.getElementById(id);
+                const stocks = data[group] || [];
+                if (stocks.length === 0) {
+                    el.innerHTML = '<div class="loading">暂无数据</div>';
+                    return;
+                }
+                let html = '<table class="table"><thead><tr><th>#</th><th>代码</th><th>名称</th><th>初始权重</th><th>当前权重</th></tr></thead><tbody>';
+                stocks.forEach((s, i) => {
+                    html += `<tr>
+                        <td>${i + 1}</td>
+                        <td>${s.code || '--'}</td>
+                        <td>${s.name || '--'}</td>
+                        <td>${s.weight || '10.00%'}</td>
+                        <td>${s.current || '--'}</td>
+                    </tr>`;
+                });
+                html += '</tbody></table>';
+                el.innerHTML = html;
+            };
+            render('holdings-value-yield', 'value_yield_10');
+            render('holdings-all-core', 'all_core_12');
+        })
+        .catch(err => {
+            document.getElementById('holdings-value-yield').innerHTML =
+                '<div class="loading">📊 首次部署，等待第一次数据</div>';
+            document.getElementById('holdings-all-core').innerHTML =
+                '<div class="loading">📊 首次部署，等待第一次数据</div>';
+        });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,7 @@
+# Python 依赖
+pyyaml>=6.0
+matplotlib>=3.7
+numpy>=1.24
+# 真实数据需要（demo 不需要）
+akshare>=1.13.0
+pandas>=2.0

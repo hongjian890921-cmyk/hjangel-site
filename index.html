@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="hjangel.com · 价值投资研究手记：十大金股周报、个股深度研究、双组合净值实证，公开记录判断并用净值验证。">
+    <meta name="theme-color" content="#1F3A5F">
+    <title>hjangel.com · 投研手记</title>
+    <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+<nav class="nav">
+    <div class="nav-container">
+        <a href="index.html" class="nav-logo">hjangel<span class="accent">·</span>投研手记</a>
+        <ul class="nav-links">
+            <li><a href="index.html" class="active">首页</a></li>
+            <li><a href="research.html">研究</a></li>
+            <li><a href="portfolio.html">组合追踪</a></li>
+            <li><a href="about.html">关于</a></li>
+        </ul>
+    </div>
+</nav>
+
+<main class="container">
+
+    <!-- Hero -->
+    <section class="hero">
+        <div class="hero-kicker">HJANGEL.COM · 个人投研主页</div>
+        <h1 class="hero-title">把判断公开，<br>用净值验证。</h1>
+        <p class="hero-sub">价值投资手记：每周十大金股观点、个股深度研究、双组合净值实证。
+            A股 / 港股 / 美股三地跟踪，目标跑赢沪深300 与中证红利。内容每周日更新。</p>
+        <div class="hero-cta">
+            <a class="btn btn-primary" href="research.html">最新研究</a>
+            <a class="btn btn-ghost" href="portfolio.html">组合净值</a>
+        </div>
+    </section>
+
+    <!-- 最新研究 -->
+    <div class="section-head">
+        <h2>最新研究</h2>
+        <a class="more-link" href="research.html">全部文章 →</a>
+    </div>
+
+    <div class="article-list">
+        <a class="article-card" href="research.html">
+            <span class="article-tag wip">整理中 · 每周日更新</span>
+            <div class="article-title">十大金股周报 · 第 01 期</div>
+            <div class="article-excerpt">跟踪池组合的每周观点、调仓记录与净值表现。首发第 01 期正在整理，将在此公开完整持仓与判断依据。</div>
+            <div class="article-meta">预计 2026-09-13 上线 <span class="dot"></span> 阅读约 3 分钟</div>
+        </a>
+        <a class="article-card" href="portfolio.html">
+            <span class="article-tag teal">组合实证 · 进行中</span>
+            <div class="article-title">双组合净值追踪：跑赢指数才是硬道理</div>
+            <div class="article-excerpt">「价值红利 10 只」与「全枢约 12 只」等权拟合净值，周度对比沪深300、中证红利，每周五收盘价更新。</div>
+            <div class="article-meta">自 2026-08-14 = 1.0 起测 <span class="dot"></span> 已运行 4 周</div>
+        </a>
+        <a class="article-card" href="about.html">
+            <span class="article-tag wip">规划中</span>
+            <div class="article-title">为什么把投资研究放在网上</div>
+            <div class="article-excerpt">研究的目的不是正确，是可证伪。公开持仓与观点，用净值结果说话——这是本站存在的理由。</div>
+            <div class="article-meta">随笔 <span class="dot"></span> 待发布</div>
+        </a>
+    </div>
+
+    <!-- 组合快照 -->
+    <div class="section-head">
+        <h2>组合净值快照</h2>
+        <a class="more-link" href="portfolio.html">查看净值曲线 →</a>
+    </div>
+
+    <div id="snapshot" class="summary-grid">
+        <div class="summary-item">
+            <div class="summary-label">数据加载</div>
+            <div class="summary-value flat" style="font-size:16px;">读取中...</div>
+        </div>
+    </div>
+    <p class="summary-sub" style="margin-top:-8px;">等权拟合净值 · 起始日 2026-08-14 = 1.0 · 每周五收盘更新。查看完整曲线与口径请进<a href="portfolio.html" style="color:var(--color-primary);">组合追踪</a>。</p>
+
+    <!-- 关于简介 -->
+    <div class="section-head">
+        <h2>关于本站</h2>
+    </div>
+    <div class="intro-grid">
+        <div class="card" style="margin:0;">
+            <div class="card-title">研究原则</div>
+            <p style="font-size:14px;line-height:1.7;">事实与观点分级呈现，估值口径标准化；买股票就是买公司，用深度研究换取持有信心。</p>
+        </div>
+        <div class="card" style="margin:0;">
+            <div class="card-title">内容栏目</div>
+            <p style="font-size:14px;line-height:1.7;">十大金股周报（每周日）· 财报点评 · 个股深度研究 · 组合净值实证。与公众号 studyvalue 同步更新。</p>
+        </div>
+    </div>
+
+</main>
+
+<footer class="footer">
+    <div>hjangel.com · 投研手记 · <a href="about.html">关于与免责声明</a></div>
+    <div class="disclaimer">本站所有内容仅作个人研究记录，不构成任何投资建议。市场有风险，决策需谨慎。</div>
+</footer>
+
+<script>
+    // 组合净值快照：读取 data/portfolio.json，展示各序列最新净值
+    fetch('data/portfolio.json')
+        .then(r => r.ok ? r.json() : Promise.reject('no data'))
+        .then(data => {
+            const series = data.series || {};
+            const el = document.getElementById('snapshot');
+            el.innerHTML = '';
+
+            const isFlatDummy = (arr) =>
+                arr.length > 2 && arr.every(v => Math.abs(v - 1) < 1e-9);
+
+            Object.keys(series).forEach(name => {
+                const arr = series[name];
+                if (isFlatDummy(arr)) return; // 全 1.0 视为数据缺失，不展示
+
+                const latest = arr[arr.length - 1] || 1;
+                const change = (latest - 1) * 100;
+                const cls = change > 0.01 ? 'up' : (change < -0.01 ? 'down' : 'flat');
+                const sign = change > 0 ? '+' : '';
+
+                const item = document.createElement('div');
+                item.className = 'summary-item';
+                item.innerHTML = `
+                    <div class="summary-label">${name}</div>
+                    <div class="summary-value ${cls}">${latest.toFixed(4)}</div>
+                    <div class="summary-sub">自起始日 ${sign}${change.toFixed(2)}%</div>`;
+                el.appendChild(item);
+            });
+
+            if (!el.children.length) {
+                el.innerHTML = '<div class="summary-item"><div class="summary-label">组合数据</div><div class="summary-value flat" style="font-size:16px;">等待首次更新</div></div>';
+            }
+        })
+        .catch(() => {
+            document.getElementById('snapshot').innerHTML =
+                '<div class="summary-item"><div class="summary-label">组合数据</div><div class="summary-value flat" style="font-size:16px;">等待首次数据更新</div></div>';
+        });
+</script>
+
+</body>
+</html>

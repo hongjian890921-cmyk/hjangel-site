@@ -1,0 +1,13 @@
+# Cloudflare Pages 部署配置
+# 部署命令：wrangler pages deploy . --project-name=hjangel
+
+name = "hjangel"
+compatibility_date = "2025-09-01"
+
+[build]
+  # 静态站点无需构建
+  publish = "."
+
+[site]
+  # 实际部署后会替换
+  bucket = "."

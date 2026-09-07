@@ -1,0 +1,79 @@
+# 投研周记组合配置
+# 起始日：2026-08-14
+# 再平衡：月度
+#
+# 组合设计：
+# - all_core_12：跟踪池全部 12 只，覆盖多行业
+# - value_yield_10：在 12 只里剔除宁德时代 + 泡泡玛特（PE 偏高）
+#
+# 市场标记：
+#   - cn: A 股，code 为 6 位数字
+#   - hk: 港股，code 为 5 位数字（如 00700）
+#   - us: 美股，code 为股票代码（如 GOOGL）
+
+# 注意：必须加引号，否则 YAML 会解析成 date 对象
+start_date: "2026-08-14"
+rebalance: 月度再平衡
+benchmark:
+  - 沪深300
+  - 中证红利
+
+portfolios:
+  all_core_12:
+    name: 全枢约12只等权
+    description: 跟踪池全部 12 只，多行业核心资产
+    stocks:
+      - market: cn
+        code: "600519"
+        name: 贵州茅台
+      - market: cn
+        code: "000776"
+        name: 广发证券
+      - market: hk
+        code: "00700"
+        name: 腾讯控股
+      - market: cn
+        code: "300750"
+        name: 宁德时代
+      - market: us
+        code: "GOOGL"
+        name: 谷歌
+      - market: cn
+        code: "603259"
+        name: 药明康德
+      - market: cn
+        code: "601899"
+        name: 紫金矿业
+      - market: hk
+        code: "00883"
+        name: 中国海洋石油
+      - market: cn
+        code: "000333"
+        name: 美的集团
+      - market: us
+        code: "PDD"
+        name: 拼多多
+      - market: hk
+        code: "09992"
+        name: 泡泡玛特
+      - market: hk
+        code: "00788"
+        name: 中国铁塔
+
+  value_yield_10:
+    name: 价值红利10只等权
+    description: 在 12 只里剔除宁德时代 + 泡泡玛特，专注高股息 + 低估值
+    exclude_from: all_core_12
+    exclude_codes: ["300750", "09992"]
+    stocks: []
+    # 等价于（脚本会自动从 all_core_12 里剔除 300750 和 09992）：
+    # - 贵州茅台 600519
+    # - 广发证券 000776
+    # - 腾讯控股 00700
+    # - 谷歌 GOOGL
+    # - 药明康德 603259
+    # - 紫金矿业 601899
+    # - 中国海洋石油 00883
+    # - 美的集团 000333
+    # - 拼多多 PDD
+    # - 中国铁塔 00788
